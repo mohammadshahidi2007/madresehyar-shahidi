@@ -1,1 +1,254 @@
 
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مدرسه‌یار شهیدی</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Tahoma,Arial;
+ background:#f3f4fa;
+ color:#252744;
+}
+header{
+ background:linear-gradient(135deg,#38236e,#7651b5);
+ color:white;
+ padding:25px 18px;
+ border-radius:0 0 25px 25px;
+}
+header h2{margin:0 0 8px}
+.container{padding:18px;max-width:850px;margin:auto}
+.stats{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:12px;
+}
+.card{
+ background:white;
+ padding:18px;
+ border-radius:16px;
+ box-shadow:0 3px 12px #0000000b;
+ margin-bottom:13px;
+}
+.stat{font-size:25px;font-weight:bold;color:#7046ad}
+.menu{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:12px;
+ margin:20px 0;
+}
+button{
+ border:0;
+ border-radius:12px;
+ padding:13px;
+ background:#7046ad;
+ color:white;
+ font-size:14px;
+ cursor:pointer;
+}
+.menu button{min-height:75px;font-size:15px}
+input,select{
+ width:100%;
+ padding:13px;
+ margin:8px 0;
+ border:1px solid #ddd;
+ border-radius:10px;
+ font-size:14px;
+}
+.student{
+ background:#f8f6fc;
+ padding:12px;
+ border-radius:10px;
+ margin:8px 0;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:8px;
+}
+.small{padding:8px;font-size:12px}
+.danger{background:#d94b58}
+.green{background:#258a65}
+.hidden{display:none}
+h3{color:#59378e}
+footer{text-align:center;padding:25px;color:#888}
+</style>
+</head>
+
+<body>
+
+<header>
+<h2>🎓 مدرسه‌یار شهیدی</h2>
+<p>سامانه هوشمند مدیریت کلاس‌های هفتم تا نهم</p>
+</header>
+
+<div class="container">
+
+<div class="stats">
+<div class="card">
+تعداد دانش‌آموزان
+<div class="stat" id="total">۰</div>
+</div>
+<div class="card">
+حاضرین امروز
+<div class="stat" id="present">۰</div>
+</div>
+</div>
+
+<div class="card">
+<h3>📚 انتخاب پایه</h3>
+<select id="grade" onchange="render()">
+<option value="7">پایه هفتم</option>
+<option value="8">پایه هشتم</option>
+<option value="9">پایه نهم</option>
+</select>
+</div>
+
+<div class="menu">
+<button onclick="show('students')">👨‍🎓 دانش‌آموزان</button>
+<button onclick="show('attendance')">📋 حضور و غیاب</button>
+<button onclick="show('points')">🏆 امتیازات</button>
+<button onclick="show('report')">📊 گزارش کلاس</button>
+</div>
+
+<section id="students" class="card">
+<h3>👨‍🎓 مدیریت دانش‌آموزان</h3>
+<input id="name" placeholder="نام و نام خانوادگی">
+<button onclick="addStudent()">➕ افزودن دانش‌آموز</button>
+<div id="studentList"></div>
+</section>
+
+<section id="attendance" class="card hidden">
+<h3>📋 حضور و غیاب</h3>
+<p>وضعیت امروز دانش‌آموزان را مشخص کن.</p>
+<div id="attendanceList"></div>
+</section>
+
+<section id="points" class="card hidden">
+<h3>🏆 سیستم امتیازدهی</h3>
+<div id="pointsList"></div>
+</section>
+
+<section id="report" class="card hidden">
+<h3>📊 گزارش عملکرد کلاس</h3>
+<p>تعداد دانش‌آموزان: <b id="rTotal">۰</b></p>
+<p>مجموع امتیازات: <b id="rPoints">۰</b></p>
+<p>حاضرین امروز: <b id="rPresent">۰</b></p>
+</section>
+
+<footer>
+مدرسه‌یار شهیدی | طراحی آموزشی هوشمند
+</footer>
+
+</div>
+
+<script>
+
+let data=JSON.parse(localStorage.getItem("schoolData")||"{}");
+
+function getClass(){
+ let g=document.getElementById("grade").value;
+ if(!data[g]) data[g]=[];
+ return data[g];
+}
+
+function save(){
+ localStorage.setItem("schoolData",JSON.stringify(data));
+ render();
+}
+
+function addStudent(){
+ let input=document.getElementById("name");
+ let name=input.value.trim();
+ if(!name)return alert("نام دانش‌آموز را وارد کن");
+
+ getClass().push({
+ id:Date.now(),
+ name:name,
+ points:0,
+ attendance:{}
+ });
+
+ input.value="";
+ save();
+}
+
+function addPoint(id,value){
+ let s=getClass().find(x=>x.id===id);
+ if(s){s.points+=value;save();}
+}
+
+function removeStudent(id){
+ if(!confirm("دانش‌آموز حذف شود؟"))return;
+ let arr=getClass();
+ let index=arr.findIndex(x=>x.id===id);
+ if(index!==-1)arr.splice(index,1);
+ save();
+}
+
+function setAttendance(id,status){
+ let s=getClass().find(x=>x.id===id);
+ let today=new Date().toLocaleDateString("fa-IR");
+ s.attendance[today]=status;
+ save();
+}
+
+function render(){
+ let arr=getClass();
+ let today=new Date().toLocaleDateString("fa-IR");
+
+ document.getElementById("total").innerText=arr.length;
+
+ let present=arr.filter(s=>s.attendance[today]==="حاضر").length;
+ document.getElementById("present").innerText=present;
+
+ document.getElementById("studentList").innerHTML=
+ arr.map(s=>`
+ <div class="student">
+ <span>${s.name}</span>
+ <button class="danger small" onclick="removeStudent(${s.id})">حذف</button>
+ </div>`).join("");
+
+ document.getElementById("attendanceList").innerHTML=
+ arr.map(s=>`
+ <div class="student">
+ <span>${s.name}</span>
+ <select onchange="setAttendance(${s.id},this.value)">
+ <option value="">انتخاب وضعیت</option>
+ <option ${s.attendance[today]==="حاضر"?"selected":""}>حاضر</option>
+ <option ${s.attendance[today]==="غایب"?"selected":""}>غایب</option>
+ <option ${s.attendance[today]==="تأخیر"?"selected":""}>تأخیر</option>
+ </select>
+ </div>`).join("");
+
+ document.getElementById("pointsList").innerHTML=
+ arr.map(s=>`
+ <div class="student">
+ <span>${s.name} | ⭐ ${s.points}</span>
+ <div>
+ <button class="small green" onclick="addPoint(${s.id},5)">+۵</button>
+ <button class="small" onclick="addPoint(${s.id},1)">+۱</button>
+ </div>
+ </div>`).join("");
+
+ document.getElementById("rTotal").innerText=arr.length;
+ document.getElementById("rPoints").innerText=
+ arr.reduce((sum,s)=>sum+s.points,0);
+ document.getElementById("rPresent").innerText=present;
+}
+
+function show(id){
+ document.querySelectorAll("section").forEach(
+ s=>s.classList.add("hidden")
+ );
+ document.getElementById(id).classList.remove("hidden");
+}
+
+render();
+
+</script>
+</body>
+</html>
