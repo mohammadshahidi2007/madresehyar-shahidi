@@ -5,6 +5,8 @@ namespace Tests\Feature\Database;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
+use App\Models\AcademicYear;
+use App\Models\Student;
 use Tests\TestCase;
 
 class SchoolSchemaTest extends TestCase
@@ -85,4 +87,34 @@ class SchoolSchemaTest extends TestCase
         $this->expectException(QueryException::class);
         DB::table('classrooms')->insert($row);
     }
+    public function test_eloquent_models_expose_school_relationships(): void
+    {
+        $year = AcademicYear::create([
+            'name' => '1407-1408',
+            'starts_on' => '2028-09-23',
+            'ends_on' => '2029-06-21',
+            'is_active' => true,
+        ]);
+
+        $classroom = $year->classrooms()->create([
+            'grade' => 9,
+            'section' => 'ج',
+        ]);
+
+        $student = Student::create([
+            'student_code' => 'ST-MODEL-001',
+            'first_name' => 'نمونه',
+            'last_name' => 'آزمایش',
+        ]);
+
+        $classroom->students()->attach($student->id, [
+            'enrolled_on' => '2028-09-23',
+            'status' => 'active',
+        ]);
+
+        $this->assertTrue($year->classrooms()->whereKey($classroom->id)->exists());
+        $this->assertTrue($student->classrooms()->whereKey($classroom->id)->exists());
+        $this->assertSame('active', $student->classrooms()->first()->pivot->status);
+    }
+
 }
