@@ -33,3 +33,17 @@ The school is in Iran. Do not deploy this project to Render: its Terms of Servic
 No verified permanently-free Iranian managed Laravel + PostgreSQL hosting tier has been selected. Liara currently advertises a 500,000 toman introductory credit and paid hourly resources; this is a trial credit, not permanent free hosting. The genuinely no-cloud-cost development option is self-hosting on school-owned hardware, but it requires a continuously powered machine, stable internet, secure network configuration, and independent backups.
 
 For now, keep development local/CI-only with synthetic data. Do not connect real student records or publish a live API until a compliant hosting option, backup plan, and operational owner are confirmed.
+
+
+## School database schema (initial)
+
+The first school-core migration creates academic years, classrooms, students, subjects, and classroom enrollments:
+
+```bash
+php artisan migrate
+php artisan migrate:status
+```
+
+The initial migration is covered by `tests/Feature/Database/SchoolSchemaTest.php`. CI uses synthetic data and in-memory SQLite. Before relying on the schema, add and pass a separate PostgreSQL service-container test; SQLite success alone does not prove PostgreSQL compatibility.
+
+The initial student record intentionally excludes national ID, address, phone, birth date, and health information.
