@@ -36,6 +36,7 @@
 - `.github/workflows/backend-ci.yml`
 - `backend/README.md`
 - `docs/DATA-MODEL.md`
+- `docs/AUTH-DESIGN.md`
 
 ## دامنه مدل داده اولیه
 
