@@ -14,6 +14,20 @@ class SchoolDomainValidationTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_write_requests_are_denied_until_role_policies_are_implemented(): void
+    {
+        $requests = [
+            new StoreAcademicYearRequest(),
+            new StoreClassroomRequest(),
+            new StoreStudentRequest(),
+            new StoreEnrollmentRequest(),
+        ];
+
+        foreach ($requests as $request) {
+            $this->assertFalse($request->authorize());
+        }
+    }
+
     public function test_classroom_grade_is_limited_to_seventh_through_ninth(): void
     {
         $yearId = $this->createAcademicYear();
