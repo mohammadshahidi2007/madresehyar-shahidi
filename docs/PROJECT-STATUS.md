@@ -3,7 +3,7 @@
 **آخرین به‌روزرسانی:** ۱۵ نوامبر ۲۰۲۶  
 **شاخه بک‌اند:** `backend/laravel-bootstrap`  
 **آخرین commit کد:** `55e8ce5d81ca23d4c6a9772ca6b58f32540adad6`  
-**CI آخرین commit کد:** [اجرای شماره ۹۷](https://github.com/mohammadshahidi2007/madresehyar-shahidi/actions/runs/43749001122) — SQLite موفق؛ PostgreSQL 16 در زمان ثبت این سند در حال اجرا  
+**CI آخرین commit کد:** [اجرای شماره ۹۷](https://github.com/mohammadshahidi2007/madresehyar-shahidi/actions/runs/43749001122) — هر دو job موفق؛ ۱۱ آزمون و ۲۹ assertion در هر محیط  
 **درخواست ادغام:** [PR شماره ۵](https://github.com/mohammadshahidi2007/madresehyar-shahidi/pull/5) — باز و Draft
 
 ## وضعیت کلی
@@ -26,7 +26,7 @@
 
 - CI شماره ۶۷ روی commit `994c6cbd6263efbb436fb2395d77158dab37e574`: هر دو job موفق؛ ۵ آزمون و ۱۳ assertion در هر محیط. این اجرا قبل از اعتبارسنجی‌های جدید بوده است.
 - CI شماره ۹۳ روی commit `8d01e2b364ded115f73a40d9530ab713ded50c48`: شکست آزمون یکتایی بخش کلاس به علت آماده‌نشدن context درخواست در تست. کد تست اصلاح شد؛ این شکست پنهان یا به‌عنوان موفقیت گزارش نمی‌شود.
-- CI شماره ۹۷ روی commit کد `55e8ce5d81ca23d4c6a9772ca6b58f32540adad6`: SQLite موفق؛ نتیجه PostgreSQL 16 هنگام آخرین بررسی هنوز در حال اجرا بود. نتیجه نهایی باید از لینک اجرای CI بررسی شود.
+- CI شماره ۹۷ روی commit کد `55e8ce5d81ca23d4c6a9772ca6b58f32540adad6`: هر دو job SQLite و PostgreSQL 16 موفق شدند: ۱۱ آزمون و ۲۹ assertion در هر محیط.
 
 ## مواردی که هنوز عملیاتی نیستند
 
