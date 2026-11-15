@@ -1,14 +1,14 @@
 <?php
 
-namespace App\\Http\\Requests;
+namespace App\Http\Requests;
 
-use Illuminate\\Foundation\\Http\\FormRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
 class StoreAcademicYearRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // Authorization is deliberately deny-by-default until school roles and policies are wired.
+        // Deny by default until school roles and policies are wired.
         return false;
     }
 
