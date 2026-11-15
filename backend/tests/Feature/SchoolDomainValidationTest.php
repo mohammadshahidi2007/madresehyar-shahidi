@@ -78,17 +78,19 @@ class SchoolDomainValidationTest extends TestCase
         $yearId = $this->createAcademicYear();
         $this->createClassroom($yearId);
 
-        $duplicate = Validator::make([
+        $duplicateData = [
             'academic_year_id' => $yearId,
             'grade' => 7,
             'section' => 'الف',
-        ], (new StoreClassroomRequest())->rules());
-
-        $differentGrade = Validator::make([
+        ];
+        $differentGradeData = [
             'academic_year_id' => $yearId,
             'grade' => 8,
             'section' => 'الف',
-        ], (new StoreClassroomRequest())->rules());
+        ];
+
+        $duplicate = Validator::make($duplicateData, $this->classroomRules($duplicateData));
+        $differentGrade = Validator::make($differentGradeData, $this->classroomRules($differentGradeData));
 
         $this->assertTrue($duplicate->fails());
         $this->assertTrue($differentGrade->passes());
@@ -98,11 +100,12 @@ class SchoolDomainValidationTest extends TestCase
     {
         $yearId = $this->createAcademicYear();
 
-        $classroom = Validator::make([
+        $classroomData = [
             'academic_year_id' => $yearId,
             'grade' => 7,
             'section' => 'الف',
-        ], (new StoreClassroomRequest())->rules());
+        ];
+        $classroom = Validator::make($classroomData, $this->classroomRules($classroomData));
 
         $student = Validator::make([
             'student_code' => 'ST_1405-001',
@@ -135,6 +138,14 @@ class SchoolDomainValidationTest extends TestCase
         ], (new StoreEnrollmentRequest())->rules());
 
         $this->assertTrue($validator->fails());
+    }
+
+    private function classroomRules(array $data): array
+    {
+        $request = new StoreClassroomRequest();
+        $request->merge($data);
+
+        return $request->rules();
     }
 
     private function createAcademicYear(): int
