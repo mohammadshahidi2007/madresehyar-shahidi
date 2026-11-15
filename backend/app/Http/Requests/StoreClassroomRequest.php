@@ -1,9 +1,9 @@
 <?php
 
-namespace App\\Http\\Requests;
+namespace App\Http\Requests;
 
-use Illuminate\\Foundation\\Http\\FormRequest;
-use Illuminate\\Validation\\Rule;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreClassroomRequest extends FormRequest
 {
@@ -17,7 +17,7 @@ class StoreClassroomRequest extends FormRequest
         return [
             'academic_year_id' => ['required', 'integer', 'exists:academic_years,id'],
             'grade' => ['required', 'integer', Rule::in([7, 8, 9])],
-            'section' => ['required', 'string', 'max:20', 'regex:/^[\\p{L}\\p{N} _-]+$/u'],
+            'section' => ['required', 'string', 'max:20', 'regex:/^[\p{L}\p{N} _-]+$/u'],
         ];
     }
 }
