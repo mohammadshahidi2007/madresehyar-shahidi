@@ -59,6 +59,27 @@ class SchoolDomainValidationTest extends TestCase
         $this->assertTrue($invalid->fails());
     }
 
+    public function test_classroom_section_must_be_unique_within_year_and_grade(): void
+    {
+        $yearId = $this->createAcademicYear();
+        $this->createClassroom($yearId);
+
+        $duplicate = Validator::make([
+            'academic_year_id' => $yearId,
+            'grade' => 7,
+            'section' => 'الف',
+        ], (new StoreClassroomRequest())->rules());
+
+        $differentGrade = Validator::make([
+            'academic_year_id' => $yearId,
+            'grade' => 8,
+            'section' => 'الف',
+        ], (new StoreClassroomRequest())->rules());
+
+        $this->assertTrue($duplicate->fails());
+        $this->assertTrue($differentGrade->passes());
+    }
+
     public function test_persian_class_section_and_internal_student_code_are_accepted(): void
     {
         $yearId = $this->createAcademicYear();
