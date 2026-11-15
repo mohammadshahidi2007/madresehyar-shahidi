@@ -1,6 +1,6 @@
 # Madresehyar Shahidi API
 
-Laravel backend bootstrap for the school platform.
+Laravel backend for the school platform. This branch is a development scaffold, not a production service.
 
 ## Requirements
 - PHP 8.3+
@@ -17,33 +17,37 @@ php artisan serve
 
 Set local database credentials in `.env`. Never commit that file.
 
-## Endpoints
+## Current endpoints
 - `GET /up` — framework health
 - `GET /api/health` — API health
+
+No student, classroom, or academic-year write endpoints are exposed yet. The current FormRequest classes intentionally deny authorization until role-based policies are implemented.
 
 ## Tests
 ```bash
 composer test
-```
-Feature tests must use synthetic data and an in-memory SQLite database.
-
-## Iran hosting decision
-The school is in Iran. Do not deploy this project to Render: its Terms of Service explicitly exclude people located in or resident in Iran. Do not use a foreign provider unless its current terms and legal eligibility have been verified for this exact use.
-
-No verified permanently-free Iranian managed Laravel + PostgreSQL hosting tier has been selected. Liara currently advertises a 500,000 toman introductory credit and paid hourly resources; this is a trial credit, not permanent free hosting. The genuinely no-cloud-cost development option is self-hosting on school-owned hardware, but it requires a continuously powered machine, stable internet, secure network configuration, and independent backups.
-
-For now, keep development local/CI-only with synthetic data. Do not connect real student records or publish a live API until a compliant hosting option, backup plan, and operational owner are confirmed.
-
-
-## School database schema (initial)
-
-The first school-core migration creates academic years, classrooms, students, subjects, and classroom enrollments:
-
-```bash
-php artisan migrate
-php artisan migrate:status
+vendor/bin/phpunit -c phpunit.pgsql.xml
 ```
 
-The initial migration is covered by `tests/Feature/Database/SchoolSchemaTest.php`. CI uses synthetic data and in-memory SQLite. Before relying on the schema, add and pass a separate PostgreSQL service-container test; SQLite success alone does not prove PostgreSQL compatibility.
+GitHub Actions runs feature tests against in-memory SQLite and PostgreSQL 16. Tests must use synthetic data only.
+
+## School schema and validation
+
+The initial migration creates academic years, classrooms, students, subjects, and classroom enrollments. Domain request validation currently covers:
+- academic year date ordering and unique name;
+- grades 7, 8, and 9 only;
+- Persian-compatible class section names and uniqueness within academic year + grade;
+- unique internal student codes;
+- enrollment status and date ordering.
+
+Write authorization remains deny-by-default. Validation is not a substitute for authentication or authorization.
 
 The initial student record intentionally excludes national ID, address, phone, birth date, and health information.
+
+## Iran hosting decision
+
+The school is in Iran. Do not deploy this project to Render: its current Terms of Service exclude people located in or resident in Iran. Do not bypass provider restrictions.
+
+No permanently-free Iranian managed Laravel + PostgreSQL hosting tier has been verified. Liara's introductory credit is a trial credit, not permanent free hosting. No cloud account, paid resource, database, or deployment has been created.
+
+For now, keep development/CI synthetic-data-only. Do not connect real student records or publish a live API until eligible hosting, backup/recovery, operational ownership, HTTPS, and security review are established.
