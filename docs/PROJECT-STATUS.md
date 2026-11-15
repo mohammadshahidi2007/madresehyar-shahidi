@@ -2,7 +2,7 @@
 
 **آخرین به‌روزرسانی:** ۱۵ نوامبر ۲۰۲۶  
 **شاخه کاری بک‌اند:** `backend/laravel-bootstrap`  
-**آخرین commit شاخه:** `1e5c4a69dbb49423d8d939884b231ff6472fd8a3`  
+**آخرین commit شاخه:** `212c49c1c892ab408c7528cc5b6a19bc6b2e098f`  
 **درخواست ادغام:** [PR شماره ۵](https://github.com/mohammadshahidi2007/madresehyar-shahidi/pull/5)
 
 ## هدف
@@ -21,13 +21,18 @@
 - در CI شماره ۵۴، job SQLite موفق شد؛ job PostgreSQL به دلیل نیاز SSL در فایل نمونه محیط شکست خورد.
 - تنظیم `DB_SSLMODE=disable` فقط در پیکربندی PHPUnit مخصوص سرویس محلی CI اعمال شد؛ TLS محیط عملیاتی همچنان باید فعال باشد.
 - در CI شماره ۵۸ و ۵۹، هر دو job SQLite و PostgreSQL 16 موفق شدند. خروجی PostgreSQL شامل ۴ آزمون و ۱۰ assertion موفق بود.
-- چهار مدل Eloquent و آزمون روابط آن‌ها بعد از اجرای ۵۸/۵۹ اضافه شده‌اند؛ اجرای CI شماره ۶۷ برای پوشش همین آخرین تغییرات در حال انجام است.
+- چهار مدل Eloquent و روابط آن‌ها اضافه شدند.
+- CI شماره ۶۷ برای commit کد `994c6cbd6263efbb436fb2395d77158dab37e574` با موفقیت در هر دو job SQLite و PostgreSQL 16 پایان یافت: ۵ آزمون و ۱۳ assertion در هر محیط، بدون خطای آزمون.
 
 ## آخرین تغییرات ذخیره‌شده
 
 - `backend/database/migrations/2026_11_15_000001_create_school_core_tables.php`
 - `backend/tests/Feature/Database/SchoolSchemaTest.php`
 - `backend/phpunit.pgsql.xml`
+- `backend/app/Models/AcademicYear.php`
+- `backend/app/Models/Classroom.php`
+- `backend/app/Models/Student.php`
+- `backend/app/Models/Subject.php`
 - `.github/workflows/backend-ci.yml`
 - `backend/README.md`
 - `docs/DATA-MODEL.md`
@@ -44,7 +49,7 @@
 
 ## مواردی که هنوز انجام نشده‌اند
 
-1. تکمیل CI شماره ۶۷ برای آزمون روابط مدل‌های Eloquent روی SQLite و PostgreSQL.
+1. تکمیل اعتبارسنجی دامنه و قواعد سال تحصیلی/پایه‌ها؛ سپس افزودن APIهای امن.
 2. تکمیل قواعد اعتبارسنجی پایه ۷ تا ۹ و بازه تاریخ سال تحصیلی.
 3. احراز هویت، نقش‌ها و سیاست‌های مجوز سمت سرور.
 4. تخصیص دبیر به کلاس و درس.
@@ -62,4 +67,4 @@
 
 ## گام بعدی
 
-پیگیری نتیجه CI شماره ۶۷؛ سپس تکمیل اعتبارسنجی دامنه و طراحی احراز هویت/مجوزها.
+تکمیل اعتبارسنجی دامنه و طراحی احراز هویت/مجوزها؛ سپس پیاده‌سازی APIهای کلاس و دانش‌آموز.
