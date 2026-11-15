@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\\Feature\\Database;
+namespace Tests\Feature\Database;
 
-use Illuminate\\Foundation\\Testing\\RefreshDatabase;
-use Illuminate\\Support\\Facades\\DB;
-use Illuminate\\Database\\QueryException;
-use Tests\\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+use Tests\TestCase;
 
 class SchoolSchemaTest extends TestCase
 {
