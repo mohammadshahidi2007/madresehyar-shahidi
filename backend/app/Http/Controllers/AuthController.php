@@ -4,6 +4,7 @@ use App\Models\AuditLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 class AuthController {
  public function login(Request $request) {
@@ -31,6 +32,7 @@ class AuthController {
   $request->user()->forceFill(['password'=>$d['password'],'must_change_password'=>false,'password_changed_at'=>now()])->save();
   AuditLog::record($request, 'auth.password_changed', $request->user()->id);
   $request->session()->regenerate();
+  DB::table('sessions')->where('user_id', $request->user()->id)->where('id', '!=', $request->session()->getId())->delete();
   return response()->json(['message'=>'گذرواژه با موفقیت تغییر کرد.']);
  }
  private function payload($u): array { return ['id'=>$u->id,'name'=>$u->name,'username'=>$u->username,'roles'=>$u->roles()->pluck('slug'),'is_active'=>$u->is_active,'must_change_password'=>$u->must_change_password]; }
