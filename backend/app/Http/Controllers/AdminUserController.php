@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+use App\Models\AuditLog;
 use App\Models\Role;
 use App\Models\Student;
 use App\Models\Teacher;
@@ -27,12 +28,14 @@ class AdminUserController {
    else Student::create(['user_id'=>$u->id,'student_number'=>$d['student_number'],'grade_level'=>$d['grade_level']]);
    return $u;
   });
+  AuditLog::record($request, 'admin.user_created', $u->id, ['role'=>$d['role']]);
   return response()->json(['user'=>['id'=>$u->id,'name'=>$u->name,'username'=>$u->username,'role'=>$d['role']],'temporary_password'=>$temporary,'warning'=>'این گذرواژه فقط اکنون نمایش داده می‌شود؛ آن را در log ذخیره نکنید.'],201);
  }
  public function update(Request $request, User $user) {
   $d=$request->validate(['name'=>'sometimes|required|string|max:160','is_active'=>'sometimes|boolean']);
   $user->fill($d)->save();
   if(array_key_exists('is_active',$d)&&!$d['is_active']) DB::table('sessions')->where('user_id',$user->id)->delete();
+  AuditLog::record($request, 'admin.user_updated', $user->id, ['changed_fields'=>array_keys($d)]);
   return response()->json(['message'=>'حساب به‌روزرسانی شد.']);
  }
  public function resetPassword(Request $request, User $user) {
@@ -42,6 +45,7 @@ class AdminUserController {
    $user->forceFill(['password'=>$temporary,'must_change_password'=>true])->save();
    DB::table('sessions')->where('user_id',$user->id)->delete();
   });
+  AuditLog::record($request, 'admin.password_reset', $user->id);
   return response()->json(['temporary_password'=>$temporary,'message'=>'کاربر باید در ورود بعدی گذرواژه را تغییر دهد.']);
  }
 }
