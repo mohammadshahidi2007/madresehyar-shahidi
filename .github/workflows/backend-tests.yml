@@ -14,6 +14,11 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    env:
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ":memory:"
+      CACHE_STORE: array
+      SESSION_DRIVER: array
     defaults:
       run:
         working-directory: backend
